@@ -38,8 +38,23 @@ func (s *server) StartSession(ctx context.Context, req *pb.SessionRequest) (*pb.
 
 func createWebRTCStream(src_address string) error {
 
-	// Create a new RTCPeerConnection
-	peerConnection, err := webrtc.NewPeerConnection(webrtc.Configuration{
+	m := &webrtc.MediaEngine{}
+
+	if err := m.RegisterCodec(webrtc.RTPCodecParameters{
+		RTPCodecCapability: webrtc.RTPCodecCapability{
+			MimeType:    webrtc.MimeTypeOpus,
+			ClockRate:   48000,
+			Channels:    2,
+			SDPFmtpLine: "minptime=10;useinbandfec=1;stereo=1;sprop-stereo=1;maxaveragebitrate=128000;cbr=1",
+		},
+		PayloadType: 111,
+	}, webrtc.RTPCodecTypeAudio); err != nil {
+		return err
+	}
+
+	// Create the API with this engine
+	api := webrtc.NewAPI(webrtc.WithMediaEngine(m))
+	peerConnection, err := api.NewPeerConnection(webrtc.Configuration{
 		ICEServers: []webrtc.ICEServer{
 			{
 				URLs: []string{"stun:stun.l.google.com:19302"},
@@ -84,7 +99,9 @@ func createWebRTCStream(src_address string) error {
 	}
 
 	gatherComplete := webrtc.GatheringCompletePromise(peerConnection)
-	peerConnection.SetLocalDescription(offer)
+	if err := peerConnection.SetLocalDescription(offer); err != nil {
+		return err
+	}
 	<-gatherComplete
 
 	log.Println("Created and set local description (offer) successfully!")

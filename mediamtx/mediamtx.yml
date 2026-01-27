@@ -25,3 +25,5 @@ webrtcHandshakeTimeout: 15s
 rtsp: no
 rtmp: no
 srt: no
+
+logLevel: debug
