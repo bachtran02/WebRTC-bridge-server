@@ -1,0 +1,4 @@
+[submodule "proto/webrtc-proto"]
+	path = proto/webrtc-proto
+	url = https://github.com/bachtran02/music-radio-schema.git
+	branch = main

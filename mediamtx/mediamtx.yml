@@ -1,0 +1,27 @@
+paths:
+  radio:
+    source: publisher
+
+    # runOnDemand: curl -X POST http://localhost:8080/api/radio/start
+    # runOnUnDemand: curl -X POST http://localhost:8080/api/radio/stop
+
+# Enable HLS as Egress source
+hls: yes
+hlsAddress: :8888
+
+# Use lowLatency to prevent the player from dropping quality due to buffer lag
+hlsVariant: lowLatency 
+hlsSegmentCount: 10
+hlsSegmentDuration: 2s
+hlsPartDuration: 200ms
+
+# Enable WebRTC as Ingress source
+webrtc: yes
+webrtcAddress: :8889
+webrtcEncryption: no
+webrtcHandshakeTimeout: 15s
+
+# Disable other protocols
+rtsp: no
+rtmp: no
+srt: no
