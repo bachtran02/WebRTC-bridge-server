@@ -21,27 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type SessionRequest struct {
+type StartSessionRequest struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	AudioProviderAddress string                 `protobuf:"bytes,2,opt,name=audio_provider_address,json=audioProviderAddress,proto3" json:"audio_provider_address,omitempty"`
+	AudioProviderAddress string                 `protobuf:"bytes,1,opt,name=audio_provider_address,json=audioProviderAddress,proto3" json:"audio_provider_address,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
 
-func (x *SessionRequest) Reset() {
-	*x = SessionRequest{}
+func (x *StartSessionRequest) Reset() {
+	*x = StartSessionRequest{}
 	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SessionRequest) String() string {
+func (x *StartSessionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SessionRequest) ProtoMessage() {}
+func (*StartSessionRequest) ProtoMessage() {}
 
-func (x *SessionRequest) ProtoReflect() protoreflect.Message {
+func (x *StartSessionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,39 +53,39 @@ func (x *SessionRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SessionRequest.ProtoReflect.Descriptor instead.
-func (*SessionRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use StartSessionRequest.ProtoReflect.Descriptor instead.
+func (*StartSessionRequest) Descriptor() ([]byte, []int) {
 	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SessionRequest) GetAudioProviderAddress() string {
+func (x *StartSessionRequest) GetAudioProviderAddress() string {
 	if x != nil {
 		return x.AudioProviderAddress
 	}
 	return ""
 }
 
-type SessionResponse struct {
+type StartSessionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Accepted      bool                   `protobuf:"varint,1,opt,name=accepted,proto3" json:"accepted,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SessionResponse) Reset() {
-	*x = SessionResponse{}
+func (x *StartSessionResponse) Reset() {
+	*x = StartSessionResponse{}
 	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SessionResponse) String() string {
+func (x *StartSessionResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SessionResponse) ProtoMessage() {}
+func (*StartSessionResponse) ProtoMessage() {}
 
-func (x *SessionResponse) ProtoReflect() protoreflect.Message {
+func (x *StartSessionResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -97,12 +97,92 @@ func (x *SessionResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SessionResponse.ProtoReflect.Descriptor instead.
-func (*SessionResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use StartSessionResponse.ProtoReflect.Descriptor instead.
+func (*StartSessionResponse) Descriptor() ([]byte, []int) {
 	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SessionResponse) GetAccepted() bool {
+func (x *StartSessionResponse) GetAccepted() bool {
+	if x != nil {
+		return x.Accepted
+	}
+	return false
+}
+
+type EndSessionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndSessionRequest) Reset() {
+	*x = EndSessionRequest{}
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndSessionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndSessionRequest) ProtoMessage() {}
+
+func (x *EndSessionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndSessionRequest.ProtoReflect.Descriptor instead.
+func (*EndSessionRequest) Descriptor() ([]byte, []int) {
+	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{2}
+}
+
+type EndSessionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Accepted      bool                   `protobuf:"varint,1,opt,name=accepted,proto3" json:"accepted,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndSessionResponse) Reset() {
+	*x = EndSessionResponse{}
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndSessionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndSessionResponse) ProtoMessage() {}
+
+func (x *EndSessionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndSessionResponse.ProtoReflect.Descriptor instead.
+func (*EndSessionResponse) Descriptor() ([]byte, []int) {
+	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *EndSessionResponse) GetAccepted() bool {
 	if x != nil {
 		return x.Accepted
 	}
@@ -117,7 +197,7 @@ type StreamRequest struct {
 
 func (x *StreamRequest) Reset() {
 	*x = StreamRequest{}
-	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[2]
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -129,7 +209,7 @@ func (x *StreamRequest) String() string {
 func (*StreamRequest) ProtoMessage() {}
 
 func (x *StreamRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[2]
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -142,7 +222,7 @@ func (x *StreamRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamRequest.ProtoReflect.Descriptor instead.
 func (*StreamRequest) Descriptor() ([]byte, []int) {
-	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{2}
+	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{4}
 }
 
 type AudioFrame struct {
@@ -155,7 +235,7 @@ type AudioFrame struct {
 
 func (x *AudioFrame) Reset() {
 	*x = AudioFrame{}
-	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[3]
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -167,7 +247,7 @@ func (x *AudioFrame) String() string {
 func (*AudioFrame) ProtoMessage() {}
 
 func (x *AudioFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[3]
+	mi := &file_proto_webrtc_proto_audio_stream_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -180,7 +260,7 @@ func (x *AudioFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AudioFrame.ProtoReflect.Descriptor instead.
 func (*AudioFrame) Descriptor() ([]byte, []int) {
-	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{3}
+	return file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AudioFrame) GetOpusData() []byte {
@@ -201,19 +281,23 @@ var File_proto_webrtc_proto_audio_stream_proto protoreflect.FileDescriptor
 
 const file_proto_webrtc_proto_audio_stream_proto_rawDesc = "" +
 	"\n" +
-	"%proto/webrtc-proto/audio_stream.proto\x12\x05radio\"F\n" +
-	"\x0eSessionRequest\x124\n" +
-	"\x16audio_provider_address\x18\x02 \x01(\tR\x14audioProviderAddress\"-\n" +
-	"\x0fSessionResponse\x12\x1a\n" +
+	"%proto/webrtc-proto/audio_stream.proto\x12\x05radio\"K\n" +
+	"\x13StartSessionRequest\x124\n" +
+	"\x16audio_provider_address\x18\x01 \x01(\tR\x14audioProviderAddress\"2\n" +
+	"\x14StartSessionResponse\x12\x1a\n" +
+	"\baccepted\x18\x01 \x01(\bR\baccepted\"\x13\n" +
+	"\x11EndSessionRequest\"0\n" +
+	"\x12EndSessionResponse\x12\x1a\n" +
 	"\baccepted\x18\x01 \x01(\bR\baccepted\"\x0f\n" +
 	"\rStreamRequest\"H\n" +
 	"\n" +
 	"AudioFrame\x12\x1b\n" +
 	"\topus_data\x18\x01 \x01(\fR\bopusData\x12\x1d\n" +
 	"\n" +
-	"is_silence\x18\x02 \x01(\bR\tisSilence2P\n" +
-	"\rWebRTCManager\x12?\n" +
-	"\fStartSession\x12\x15.radio.SessionRequest\x1a\x16.radio.SessionResponse\"\x002O\n" +
+	"is_silence\x18\x02 \x01(\bR\tisSilence2\xa0\x01\n" +
+	"\rWebRTCManager\x12I\n" +
+	"\fStartSession\x12\x1a.radio.StartSessionRequest\x1a\x1b.radio.StartSessionResponse\"\x00\x12D\n" +
+	"\vStopSession\x12\x18.radio.EndSessionRequest\x1a\x19.radio.EndSessionResponse\"\x002O\n" +
 	"\rAudioProvider\x12>\n" +
 	"\x0fPullAudioStream\x12\x14.radio.StreamRequest\x1a\x11.radio.AudioFrame\"\x000\x01BK\n" +
 	"\x0flavaradio.protoP\x01Z6github.com/bachtran02/webrtc-server/proto/webrtc-protob\x06proto3"
@@ -230,20 +314,24 @@ func file_proto_webrtc_proto_audio_stream_proto_rawDescGZIP() []byte {
 	return file_proto_webrtc_proto_audio_stream_proto_rawDescData
 }
 
-var file_proto_webrtc_proto_audio_stream_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_webrtc_proto_audio_stream_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_webrtc_proto_audio_stream_proto_goTypes = []any{
-	(*SessionRequest)(nil),  // 0: radio.SessionRequest
-	(*SessionResponse)(nil), // 1: radio.SessionResponse
-	(*StreamRequest)(nil),   // 2: radio.StreamRequest
-	(*AudioFrame)(nil),      // 3: radio.AudioFrame
+	(*StartSessionRequest)(nil),  // 0: radio.StartSessionRequest
+	(*StartSessionResponse)(nil), // 1: radio.StartSessionResponse
+	(*EndSessionRequest)(nil),    // 2: radio.EndSessionRequest
+	(*EndSessionResponse)(nil),   // 3: radio.EndSessionResponse
+	(*StreamRequest)(nil),        // 4: radio.StreamRequest
+	(*AudioFrame)(nil),           // 5: radio.AudioFrame
 }
 var file_proto_webrtc_proto_audio_stream_proto_depIdxs = []int32{
-	0, // 0: radio.WebRTCManager.StartSession:input_type -> radio.SessionRequest
-	2, // 1: radio.AudioProvider.PullAudioStream:input_type -> radio.StreamRequest
-	1, // 2: radio.WebRTCManager.StartSession:output_type -> radio.SessionResponse
-	3, // 3: radio.AudioProvider.PullAudioStream:output_type -> radio.AudioFrame
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 0: radio.WebRTCManager.StartSession:input_type -> radio.StartSessionRequest
+	2, // 1: radio.WebRTCManager.StopSession:input_type -> radio.EndSessionRequest
+	4, // 2: radio.AudioProvider.PullAudioStream:input_type -> radio.StreamRequest
+	1, // 3: radio.WebRTCManager.StartSession:output_type -> radio.StartSessionResponse
+	3, // 4: radio.WebRTCManager.StopSession:output_type -> radio.EndSessionResponse
+	5, // 5: radio.AudioProvider.PullAudioStream:output_type -> radio.AudioFrame
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -260,7 +348,7 @@ func file_proto_webrtc_proto_audio_stream_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_webrtc_proto_audio_stream_proto_rawDesc), len(file_proto_webrtc_proto_audio_stream_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

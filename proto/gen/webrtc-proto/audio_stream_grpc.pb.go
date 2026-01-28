@@ -20,13 +20,15 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	WebRTCManager_StartSession_FullMethodName = "/radio.WebRTCManager/StartSession"
+	WebRTCManager_StopSession_FullMethodName  = "/radio.WebRTCManager/StopSession"
 )
 
 // WebRTCManagerClient is the client API for WebRTCManager service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WebRTCManagerClient interface {
-	StartSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (*SessionResponse, error)
+	StartSession(ctx context.Context, in *StartSessionRequest, opts ...grpc.CallOption) (*StartSessionResponse, error)
+	StopSession(ctx context.Context, in *EndSessionRequest, opts ...grpc.CallOption) (*EndSessionResponse, error)
 }
 
 type webRTCManagerClient struct {
@@ -37,10 +39,20 @@ func NewWebRTCManagerClient(cc grpc.ClientConnInterface) WebRTCManagerClient {
 	return &webRTCManagerClient{cc}
 }
 
-func (c *webRTCManagerClient) StartSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (*SessionResponse, error) {
+func (c *webRTCManagerClient) StartSession(ctx context.Context, in *StartSessionRequest, opts ...grpc.CallOption) (*StartSessionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SessionResponse)
+	out := new(StartSessionResponse)
 	err := c.cc.Invoke(ctx, WebRTCManager_StartSession_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *webRTCManagerClient) StopSession(ctx context.Context, in *EndSessionRequest, opts ...grpc.CallOption) (*EndSessionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EndSessionResponse)
+	err := c.cc.Invoke(ctx, WebRTCManager_StopSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +63,8 @@ func (c *webRTCManagerClient) StartSession(ctx context.Context, in *SessionReque
 // All implementations must embed UnimplementedWebRTCManagerServer
 // for forward compatibility.
 type WebRTCManagerServer interface {
-	StartSession(context.Context, *SessionRequest) (*SessionResponse, error)
+	StartSession(context.Context, *StartSessionRequest) (*StartSessionResponse, error)
+	StopSession(context.Context, *EndSessionRequest) (*EndSessionResponse, error)
 	mustEmbedUnimplementedWebRTCManagerServer()
 }
 
@@ -62,8 +75,11 @@ type WebRTCManagerServer interface {
 // pointer dereference when methods are called.
 type UnimplementedWebRTCManagerServer struct{}
 
-func (UnimplementedWebRTCManagerServer) StartSession(context.Context, *SessionRequest) (*SessionResponse, error) {
+func (UnimplementedWebRTCManagerServer) StartSession(context.Context, *StartSessionRequest) (*StartSessionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method StartSession not implemented")
+}
+func (UnimplementedWebRTCManagerServer) StopSession(context.Context, *EndSessionRequest) (*EndSessionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method StopSession not implemented")
 }
 func (UnimplementedWebRTCManagerServer) mustEmbedUnimplementedWebRTCManagerServer() {}
 func (UnimplementedWebRTCManagerServer) testEmbeddedByValue()                       {}
@@ -87,7 +103,7 @@ func RegisterWebRTCManagerServer(s grpc.ServiceRegistrar, srv WebRTCManagerServe
 }
 
 func _WebRTCManager_StartSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SessionRequest)
+	in := new(StartSessionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +115,25 @@ func _WebRTCManager_StartSession_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: WebRTCManager_StartSession_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WebRTCManagerServer).StartSession(ctx, req.(*SessionRequest))
+		return srv.(WebRTCManagerServer).StartSession(ctx, req.(*StartSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WebRTCManager_StopSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EndSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WebRTCManagerServer).StopSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WebRTCManager_StopSession_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WebRTCManagerServer).StopSession(ctx, req.(*EndSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -114,6 +148,10 @@ var WebRTCManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "StartSession",
 			Handler:    _WebRTCManager_StartSession_Handler,
+		},
+		{
+			MethodName: "StopSession",
+			Handler:    _WebRTCManager_StopSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,6 @@
+mediamtx:
+  whip_endpoint: "http://localhost:8889/radio/whip"
+
+grpc:
+  host: "127.0.0.1"
+  port: 50051
