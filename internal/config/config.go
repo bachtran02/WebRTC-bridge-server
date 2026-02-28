@@ -20,8 +20,9 @@ func LoadConfig(path string) (Config, error) {
 }
 
 type Config struct {
-	MediaMTX MediaMTXConfig `yaml:"mediamtx"`
-	Grpc     GrpcConfig     `yaml:"grpc"`
+	MediaMTX             MediaMTXConfig `yaml:"mediamtx"`
+	Grpc                 GrpcConfig     `yaml:"grpc"`
+	AudioProviderAddress string         `yaml:"audio_provider_address"`
 }
 
 type GrpcConfig struct {
@@ -30,5 +31,5 @@ type GrpcConfig struct {
 }
 
 type MediaMTXConfig struct {
-	WhipEndpoint string `yaml:"whip_endpoint"`
+	MediaMtxHost string `yaml:"mediamtx_host"`
 }

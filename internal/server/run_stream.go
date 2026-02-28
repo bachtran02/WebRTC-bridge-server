@@ -11,11 +11,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-func (s *WebRTCManagerServer) runStream(session *StreamSession, stream grpc.ServerStreamingClient[pb.AudioFrame]) {
+func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession, stream grpc.ServerStreamingClient[pb.AudioFrame]) {
 	defer func() {
 		s.mu.Lock()
-		if s.currentSession == session {
-			s.currentSession = nil
+		if s.sessionMap[streamId] == session {
+			delete(s.sessionMap, streamId)
 		}
 		s.mu.Unlock()
 
@@ -23,6 +23,8 @@ func (s *WebRTCManagerServer) runStream(session *StreamSession, stream grpc.Serv
 		session.Stop()
 		log.Println("Streaming loop stopped.")
 	}()
+
+	log.Printf("Starting stream with id: %s", streamId)
 
 	audioTrack := session.WebRTC.AudioTrack
 	ctx := session.Ctx

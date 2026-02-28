@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/bachtran02/go-webrtc-streamer/internal/config"
@@ -13,22 +14,24 @@ import (
 
 type WebRTCManagerServer struct {
 	pb.UnimplementedWebRTCManagerServer
-	mu             sync.Mutex
-	config         *config.Config
-	currentSession *StreamSession
+	mu         sync.Mutex
+	config     *config.Config
+	sessionMap map[string]*StreamSession
 }
 
 func NewServer(cfg config.Config) *WebRTCManagerServer {
 	return &WebRTCManagerServer{
-		config:         &cfg,
-		currentSession: nil,
+		config:     &cfg,
+		sessionMap: make(map[string]*StreamSession),
 	}
 }
 
 func (s *WebRTCManagerServer) StartSession(ctx context.Context, req *pb.StartSessionRequest) (*pb.StartSessionResponse, error) {
 	s.mu.Lock()
 
-	if s.currentSession != nil {
+	fmt.Println("stream id", req.StreamId)
+
+	if s.sessionMap[req.StreamId] != nil {
 		/* Existing active WebRTC session */
 		s.mu.Unlock()
 		return &pb.StartSessionResponse{Accepted: false}, nil
@@ -37,20 +40,22 @@ func (s *WebRTCManagerServer) StartSession(ctx context.Context, req *pb.StartSes
 	s.mu.Unlock()
 
 	/* Initialize WebRTC session */
-	webRTCSession, err := webrtc_session.InitWebRTCSession(s.config.MediaMTX.WhipEndpoint)
+	whipEndpoint := s.config.MediaMTX.MediaMtxHost + fmt.Sprintf("/%s/whip", req.StreamId)
+	fmt.Println("whip endpoint", whipEndpoint)
+	webRTCSession, err := webrtc_session.InitWebRTCSession(whipEndpoint)
 	if err != nil {
 		return &pb.StartSessionResponse{Accepted: false}, err
 	}
 
 	/* Create gRPC client connection */
-	conn, err := grpc.NewClient(req.AudioProviderAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(s.config.AudioProviderAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		webRTCSession.PeerConnection.Close()
 		return &pb.StartSessionResponse{Accepted: false}, err
 	}
 
 	client := pb.NewAudioProviderClient(conn)
-	audioStream, err := client.PullAudioStream(context.Background(), &pb.StreamRequest{})
+	audioStream, err := client.PullAudioStream(context.Background(), &pb.StreamRequest{StreamId: req.StreamId})
 	if err != nil {
 		conn.Close()
 		webRTCSession.PeerConnection.Close()
@@ -67,10 +72,10 @@ func (s *WebRTCManagerServer) StartSession(ctx context.Context, req *pb.StartSes
 	}
 
 	s.mu.Lock()
-	s.currentSession = newSession
+	s.sessionMap[req.StreamId] = newSession
 	s.mu.Unlock()
 
-	go s.runStream(newSession, audioStream)
+	go s.runStream(req.StreamId, newSession, audioStream)
 	return &pb.StartSessionResponse{Accepted: true}, nil
 }
 
@@ -78,13 +83,13 @@ func (s *WebRTCManagerServer) StopSession(ctx context.Context, req *pb.EndSessio
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if s.currentSession == nil {
+	if s.sessionMap[req.StreamId] == nil {
 		return &pb.EndSessionResponse{Accepted: false}, nil
 	}
 
 	/* Stop the session and clean up resources */
-	s.currentSession.Stop()
-	s.currentSession = nil
+	s.sessionMap[req.StreamId].Stop()
+	delete(s.sessionMap, req.StreamId)
 
 	return &pb.EndSessionResponse{Accepted: true}, nil
 }
