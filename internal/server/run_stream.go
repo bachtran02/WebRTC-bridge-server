@@ -11,6 +11,10 @@ import (
 	"google.golang.org/grpc"
 )
 
+const (
+	frameDuration = 20 * time.Millisecond
+)
+
 func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession, stream grpc.ServerStreamingClient[pb.AudioFrame]) {
 	defer func() {
 		s.mu.Lock()
@@ -26,6 +30,9 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 
 	log.Printf("Starting stream with id: %s", streamId)
 
+	ticker := time.NewTicker(frameDuration)
+	defer ticker.Stop()
+
 	audioTrack := session.WebRTC.AudioTrack
 	ctx := session.Ctx
 
@@ -36,8 +43,9 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 		case <-ctx.Done():
 			log.Println("Stream cancelled by server context")
 			return
-		default:
-			// Receive next frame from stream
+		case <-ticker.C:
+			var data []byte
+
 			frame, err := stream.Recv()
 			if err == io.EOF {
 				return // Stream closed normally
@@ -47,27 +55,18 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 				return
 			}
 
-			// Log received frame to the audio track
-			log.Printf("Received audio frame of size: %d bytes", len(frame.OpusData))
+			// log.Printf("Received audio frame of size: %d bytes", len(frame.OpusData))
 
 			if frame.IsSilence {
-				err = audioTrack.WriteSample(media.Sample{
-					Data:     silenceOpusFrame,
-					Duration: 20 * time.Millisecond,
-				})
-				if err != nil {
-					if errors.Is(err, io.ErrClosedPipe) {
-						return
-					}
-					log.Printf("Error writing silence to track: %v", err)
-				}
+				data = silenceOpusFrame
 			} else {
-				err = audioTrack.WriteSample(media.Sample{
-					Data:     frame.OpusData,
-					Duration: 20 * time.Millisecond,
-				})
+				data = frame.OpusData
 			}
 
+			err = audioTrack.WriteSample(media.Sample{
+				Data:     data,
+				Duration: frameDuration,
+			})
 			if err != nil {
 				if errors.Is(err, io.ErrClosedPipe) {
 					return

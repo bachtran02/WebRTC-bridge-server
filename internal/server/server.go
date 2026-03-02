@@ -29,8 +29,6 @@ func NewServer(cfg config.Config) *WebRTCManagerServer {
 func (s *WebRTCManagerServer) StartSession(ctx context.Context, req *pb.StartSessionRequest) (*pb.StartSessionResponse, error) {
 	s.mu.Lock()
 
-	fmt.Println("stream id", req.StreamId)
-
 	if s.sessionMap[req.StreamId] != nil {
 		/* Existing active WebRTC session */
 		s.mu.Unlock()
@@ -41,7 +39,6 @@ func (s *WebRTCManagerServer) StartSession(ctx context.Context, req *pb.StartSes
 
 	/* Initialize WebRTC session */
 	whipEndpoint := s.config.MediaMTX.MediaMtxHost + fmt.Sprintf("/%s/whip", req.StreamId)
-	fmt.Println("whip endpoint", whipEndpoint)
 	webRTCSession, err := webrtc_session.InitWebRTCSession(whipEndpoint)
 	if err != nil {
 		return &pb.StartSessionResponse{Accepted: false}, err
