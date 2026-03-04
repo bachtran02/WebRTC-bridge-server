@@ -3,8 +3,9 @@ paths:
     source: publisher
 
     # TODO: replace this with env vars
-    runOnDemand: curl -X POST http://localhost:8080/mtx/start?path=$MTX_PATH
-    runOnUnDemand: curl -X DELETE http://localhost:8080/mtx/stop?path=$MTX_PATH
+    # runOnDemand: curl -X POST http://127.0.0.1:8080/mtx/start?id=$MTX_PATH
+    # runOnUnDemand: curl -X DELETE http://127.0.0.1:8080/mtx/stop?id=$MTX_PATH
+    runOnUnDemand: curl -X DELETE http://lavaradio:8080/mtx/stop?id=$MTX_PATH
 
 # Enable HLS as Egress source
 hls: yes
