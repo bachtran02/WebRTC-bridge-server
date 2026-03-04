@@ -2,8 +2,9 @@ paths:
   all:
     source: publisher
 
-    # runOnDemand: curl -X POST http://localhost:8080/api/radio/start
-    # runOnUnDemand: curl -X POST http://localhost:8080/api/radio/stop
+    # TODO: replace this with env vars
+    runOnDemand: curl -X POST http://localhost:8080/mtx/start?path=$MTX_PATH
+    runOnUnDemand: curl -X DELETE http://localhost:8080/mtx/stop?path=$MTX_PATH
 
 # Enable HLS as Egress source
 hls: yes
@@ -26,4 +27,4 @@ rtsp: no
 rtmp: no
 srt: no
 
-logLevel: debug
+# logLevel: debug

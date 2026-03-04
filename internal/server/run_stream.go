@@ -30,23 +30,52 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 
 	log.Printf("Starting stream with id: %s", streamId)
 
-	ticker := time.NewTicker(frameDuration)
-	defer ticker.Stop()
+	// ticker := time.NewTicker(frameDuration)
+	// defer ticker.Stop()
 
 	audioTrack := session.WebRTC.AudioTrack
 	ctx := session.Ctx
 
 	silenceOpusFrame := []byte{0xF8, 0xFF, 0xFE} // Opus silence frame
 
+	const windowSize = 100
+	var (
+		maxRecvDuration time.Duration
+		recvWindow      [windowSize]time.Duration
+		windowIdx       int
+		windowTotal     time.Duration
+		frameCount      int
+	)
+
 	for {
 		select {
 		case <-ctx.Done():
 			log.Println("Stream cancelled by server context")
 			return
-		case <-ticker.C:
+		default:
 			var data []byte
 
+			recvStart := time.Now()
 			frame, err := stream.Recv()
+			d := time.Since(recvStart)
+
+			// Update max
+			if d > maxRecvDuration {
+				maxRecvDuration = d
+				log.Printf("stream.Recv() new max block duration: %v", maxRecvDuration)
+			}
+
+			// Update rolling average over last 100 frames
+			windowTotal -= recvWindow[windowIdx]
+			recvWindow[windowIdx] = d
+			windowTotal += d
+			windowIdx = (windowIdx + 1) % windowSize
+			frameCount++
+			if frameCount%windowSize == 0 {
+				avg := windowTotal / windowSize
+				log.Printf("stream.Recv() avg block duration (last %d frames): %v", windowSize, avg)
+			}
+
 			if err == io.EOF {
 				return // Stream closed normally
 			}
