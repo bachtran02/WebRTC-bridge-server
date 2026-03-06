@@ -38,7 +38,7 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 
 	silenceOpusFrame := []byte{0xF8, 0xFF, 0xFE} // Opus silence frame
 
-	const windowSize = 100
+	const windowSize = 100 * 30
 	var (
 		maxRecvDuration time.Duration
 		recvWindow      [windowSize]time.Duration
@@ -73,7 +73,7 @@ func (s *WebRTCManagerServer) runStream(streamId string, session *StreamSession,
 			frameCount++
 			if frameCount%windowSize == 0 {
 				avg := windowTotal / windowSize
-				log.Printf("stream.Recv() avg block duration (last %d frames): %v", windowSize, avg)
+				log.Printf("[%s] Average block duration (last %d frames): %v", streamId, windowSize, avg)
 			}
 
 			if err == io.EOF {
