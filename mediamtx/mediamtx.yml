@@ -25,4 +25,12 @@ srt: no
 
 api: yes
 
+authInternalUsers:
+  - user: any
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+      - action: api
+
 # logLevel: debug
