@@ -45,3 +45,5 @@ temp/
 
 # Keep compiled proto files tracked
 # !proto/compiled/*.pb.go
+
+mediamtx/mediamtx_bin

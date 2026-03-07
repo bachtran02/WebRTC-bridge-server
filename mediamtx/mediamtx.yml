@@ -2,9 +2,6 @@ paths:
   all:
     source: publisher
 
-    # runOnDemand: curl -X POST http://localhost:8080/api/radio/start
-    # runOnUnDemand: curl -X POST http://localhost:8080/api/radio/stop
-
 # Enable HLS as Egress source
 hls: yes
 hlsAddress: :8888
@@ -26,4 +23,14 @@ rtsp: no
 rtmp: no
 srt: no
 
-logLevel: debug
+api: yes
+
+authInternalUsers:
+  - user: any
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+      - action: api
+
+# logLevel: debug
