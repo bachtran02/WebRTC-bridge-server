@@ -6,12 +6,6 @@ paths:
 hls: yes
 hlsAddress: :8888
 
-# Use lowLatency to prevent the player from dropping quality due to buffer lag
-hlsVariant: lowLatency 
-hlsSegmentCount: 10
-hlsSegmentDuration: 2s
-hlsPartDuration: 200ms
-
 # Enable WebRTC as Ingress source
 webrtc: yes
 webrtcAddress: :8889
